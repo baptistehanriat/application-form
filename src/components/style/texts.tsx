@@ -12,7 +12,7 @@ export const H1 = styled.h1`
 
 export const P1 = styled.p`
   font-family: Jost;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 24px;
   line-height: 130%;
   letter-spacing: -0.2px;

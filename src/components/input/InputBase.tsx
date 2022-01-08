@@ -28,6 +28,7 @@ export const PrettyInputBase = styled.input`
   height: 50px;
   max-width: 450px;
   border: none;
+  min-width: 450px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
   padding: 0 10px 0 10px;
   color: ${Colors.Grey800};

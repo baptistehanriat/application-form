@@ -1,6 +1,6 @@
 import { cp } from 'fs'
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import styled, { CSSProperties } from 'styled-components'
 import ButtonBack from './components/button/ButtonBack'
 import ButtonPrimary from './components/button/ButtonPrimary'
 import { PrettyInputBase } from './components/input/InputBase'
@@ -71,24 +71,27 @@ function App() {
     }
   }
 
+  console.log(answers)
   return (
     <Container>
       <InnerContainer>
         {questionnaireStatus === 'ready' && (
           <>
             <H1 style={{ marginBottom: 50 }}>Ready to join us ? 🚀</H1>
-            <ButtonPrimary
-              label="Start"
-              onClick={() => {
-                setQuestionnaireStatus('ongoing')
-              }}
-            />
+            <View style={{ alignItems: 'flex-end' }}>
+              <ButtonPrimary
+                label="Start"
+                onClick={() => {
+                  setQuestionnaireStatus('ongoing')
+                }}
+              />
+            </View>
           </>
         )}
         {questionnaireStatus === 'ongoing' && (
           <>
             <View style={{ flexDirection: 'row' }}>
-              <ButtonBack onClick={onGoBack} />
+              <ButtonBack style={{ marginRight: 40 }} onClick={onGoBack} />
               <ProgressBar questions={tenantQuestionnaire} />
             </View>
 
@@ -102,7 +105,19 @@ function App() {
         )}
         {questionnaireStatus === 'finished' && (
           <>
-            <P1>Questionnaire Finished</P1>
+            <H1>All done!</H1>
+            <P1>Here is a recap of the information you filled!</P1>
+            {Object.values(answers).map((answer) => (
+              <P1 key={answer}>{answer}</P1>
+            ))}
+            <ButtonPrimary
+              onClick={() => {
+                setQuestionnaireStatus('ready')
+                setAnswers({})
+                setIndex(0)
+              }}
+              label="Start again"
+            />
           </>
         )}
       </InnerContainer>
@@ -121,8 +136,10 @@ function QuestionField(props: QuestionFieldProps) {
   }
 
   return (
-    <View>
-      <P1>{props.question.text}</P1>
+    <View style={{ marginBottom: 40, marginTop: 100 }}>
+      <P1 style={{ marginLeft: 20, marginBottom: 20 }}>
+        {props.question.text}
+      </P1>
       <PrettyInputBase
         type="email"
         placeholder="toto"
@@ -200,7 +217,7 @@ const Container = styled(View)`
 const InnerContainer = styled(View)`
   flex: 1;
   justify-content: center;
-  width: 450px; //FIXME
+  max-width: 450px;
 `
 
 export default App

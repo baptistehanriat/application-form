@@ -3,9 +3,12 @@ import ChevronLeft from '../icon/ChevronLeft'
 import { Colors } from '../style/colors'
 import { P1 } from '../style/texts'
 
-export default function ButtonBack(props: { onClick?(): void }) {
+export default function ButtonBack(props: {
+  style?: React.CSSProperties
+  onClick?(): void
+}) {
   return (
-    <Container onClick={props.onClick}>
+    <Container style={props.style} onClick={props.onClick}>
       <ChevronLeft color={Colors.Grey800} />
     </Container>
   )
