@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import ButtonBack from './components/button/ButtonBack'
 import ButtonPrimary from './components/button/ButtonPrimary'
-import InputBase, { PrettyInputBase } from './components/input/InputBase'
+import { PrettyInputBase } from './components/input/InputBase'
 import View from './components/layout/View'
 import { H1, P1 } from './components/style/texts'
 
@@ -10,25 +11,36 @@ interface Question {
   type: 'fullName' | 'email' | 'phoneNumber' | 'budget'
 }
 
-interface Answer {
-  value: string
-}
-
 function App() {
   const [answers, setAnswers] = useState<string[]>([])
+  const [previousAnswer, setPreviousAnswer] = useState('')
   const [index, setIndex] = useState(0)
   const [start, setStart] = useState(false)
-  const onComplete = (answer: string) => {
-    setAnswers([...answers, answer])
-    setIndex(index + 1)
+  const [end, setEnd] = useState(false)
+
+  const onGoNext = (answer: string) => {
+    const newAnswers = [...answers, answer]
+    console.log(newAnswers)
+    setAnswers(newAnswers)
+    setPreviousAnswer(newAnswers[index])
+    if (index === tenantQuestionnaire.length - 1) {
+      setEnd(true)
+    } else {
+      setIndex(index + 1)
+    }
+    console.log('answersNext', answers)
   }
 
   const onGoBack = () => {
-    // remove the last answer
-    setAnswers([])
-    setIndex(index - 1)
+    console.log('answersBack', answers)
+    if (index === 0) {
+      setStart(false)
+    } else {
+      setIndex(index - 1)
+    }
   }
 
+  console.log(answers)
   const tenantQuestionnaire: Question[] = [
     {
       text: "What's your full name ?",
@@ -47,7 +59,7 @@ function App() {
       type: 'budget',
     },
   ]
-  console.log(answers)
+
   return (
     <Container>
       {!start ? (
@@ -60,31 +72,39 @@ function App() {
             }}
           />
         </>
-      ) : (
+      ) : !end ? (
         <>
           <QuestionField
-            onComplete={onComplete}
+            answers={answers}
+            savedAnswer={previousAnswer}
+            onGoBack={onGoBack}
+            onGoNext={onGoNext}
             text={tenantQuestionnaire[index].text}
           />
+        </>
+      ) : (
+        <>
+          <P1>Questionnaire Finished</P1>
+          {answers.map((answer) => {
+            return <P1 key={answer}>{answer}</P1>
+          })}
         </>
       )}
     </Container>
   )
 }
 
-interface KeyboardEvent {
-  enterKey: boolean
-}
-
 function QuestionField(props: {
   text: string
-  onComplete(answer: string): void
+  answers: string[]
+  savedAnswer: string
+  onGoBack(): void
+  onGoNext(answer: string): void
 }) {
-  const [answer, setAnswer] = useState('')
-
+  const [answer, setAnswer] = useState(props.savedAnswer)
   const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === 'Enter') {
-      props.onComplete(answer)
+      props.onGoNext(answer)
       setAnswer('')
     }
   }
@@ -93,9 +113,10 @@ function QuestionField(props: {
     return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)
   }
 
-  console.log(validateEmailFormat(answer))
+  console.log('this is my answers', props.answers)
   return (
     <View>
+      <ButtonBack onClick={props.onGoBack} />
       <P1>{props.text}</P1>
       <PrettyInputBase
         type="email"
@@ -107,7 +128,7 @@ function QuestionField(props: {
       <ButtonPrimary
         label="Next"
         onClick={() => {
-          props.onComplete(answer)
+          props.onGoNext(answer)
           setAnswer('')
         }}
       />
