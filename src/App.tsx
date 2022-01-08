@@ -8,104 +8,104 @@ import { H1, P1 } from './components/style/texts'
 
 interface Question {
   text: string
-  type: 'fullName' | 'email' | 'phoneNumber' | 'budget'
+  type: 'shortString' | 'email' | 'phoneNumber' | 'budget'
+  answerKey: string
 }
 
 function App() {
-  const [answers, setAnswers] = useState<string[]>([])
-  const [previousAnswer, setPreviousAnswer] = useState('')
+  const [answers, setAnswers] = useState<Record<string, string>>({})
   const [index, setIndex] = useState(0)
-  const [start, setStart] = useState(false)
-  const [end, setEnd] = useState(false)
 
-  const onGoNext = (answer: string) => {
-    const newAnswers = [...answers, answer]
-    console.log(newAnswers)
-    setAnswers(newAnswers)
-    setPreviousAnswer(newAnswers[index])
+  const [questionnaireStatus, setQuestionnaireStatus] = useState<
+    'ready' | 'ongoing' | 'finished'
+  >('ready')
+
+  const onChange = (answer: string) => {
+    const currentQuestion = tenantQuestionnaire[index]
+    setAnswers({
+      ...answers,
+      [currentQuestion.answerKey]: answer,
+    })
+  }
+
+  const onGoNext = () => {
     if (index === tenantQuestionnaire.length - 1) {
-      setEnd(true)
+      setQuestionnaireStatus('finished')
     } else {
+      // const nextQuestion = tenantQuestionnaire[index + 1]
       setIndex(index + 1)
     }
-    console.log('answersNext', answers)
   }
 
   const onGoBack = () => {
-    console.log('answersBack', answers)
     if (index === 0) {
-      setStart(false)
+      setQuestionnaireStatus('ready')
     } else {
+      // const previousQuestion = tenantQuestionnaire[index - 1]
       setIndex(index - 1)
     }
   }
 
-  console.log(answers)
   const tenantQuestionnaire: Question[] = [
     {
       text: "What's your full name ?",
-      type: 'fullName',
+      type: 'shortString',
+      answerKey: 'nameAnswerKey',
     },
     {
       text: "What's your email ?",
       type: 'email',
+      answerKey: 'emailAnswerKey',
     },
     {
       text: "What's your phone number ?",
       type: 'phoneNumber',
+      answerKey: 'phoneAnswerKey',
     },
     {
       text: 'Select your budget',
-      type: 'budget',
+      type: 'budget', // At some point we can have one generic for this one
+      answerKey: 'budgetAnswerKey',
     },
   ]
 
   return (
     <Container>
-      {!start ? (
+      {questionnaireStatus === 'ready' && (
         <>
           <H1 style={{ marginBottom: 50 }}>Ready to join us ? 🚀</H1>
           <ButtonPrimary
             label="Start"
             onClick={() => {
-              setStart(true)
+              setQuestionnaireStatus('ongoing')
             }}
           />
         </>
-      ) : !end ? (
+      )}
+      {questionnaireStatus === 'ongoing' && (
         <>
+          <ButtonBack onClick={onGoBack} />
           <QuestionField
-            answers={answers}
-            savedAnswer={previousAnswer}
-            onGoBack={onGoBack}
-            onGoNext={onGoNext}
-            text={tenantQuestionnaire[index].text}
+            onChange={onChange}
+            answer={answers[tenantQuestionnaire[index].answerKey]}
+            question={tenantQuestionnaire[index]}
           />
+          <ButtonPrimary label="Next" onClick={onGoNext} />
         </>
-      ) : (
+      )}
+      {questionnaireStatus === 'finished' && (
         <>
           <P1>Questionnaire Finished</P1>
-          {answers.map((answer) => {
-            return <P1 key={answer}>{answer}</P1>
-          })}
         </>
       )}
     </Container>
   )
 }
 
-function QuestionField(props: {
-  text: string
-  answers: string[]
-  savedAnswer: string
-  onGoBack(): void
-  onGoNext(answer: string): void
-}) {
-  const [answer, setAnswer] = useState(props.savedAnswer)
+function QuestionField(props: QuestionFieldProps) {
   const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === 'Enter') {
-      props.onGoNext(answer)
-      setAnswer('')
+      // props.onChange()
     }
   }
 
@@ -113,29 +113,25 @@ function QuestionField(props: {
     return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)
   }
 
-  console.log('this is my answers', props.answers)
   return (
     <View>
-      <ButtonBack onClick={props.onGoBack} />
-      <P1>{props.text}</P1>
+      <P1>{props.question.text}</P1>
       <PrettyInputBase
         type="email"
         placeholder="toto"
         onKeyDown={keyDownHandler}
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
+        value={props.answer || ''}
+        onChange={(e) => props.onChange(e.target.value)}
       ></PrettyInputBase>
-      <ButtonPrimary
-        label="Next"
-        onClick={() => {
-          props.onGoNext(answer)
-          setAnswer('')
-        }}
-      />
     </View>
   )
 }
 
+interface QuestionFieldProps {
+  question: Question
+  answer: string
+  onChange(answer: string): void
+}
 const Container = styled(View)`
   justify-content: center;
   align-items: center;
