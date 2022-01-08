@@ -14,7 +14,7 @@ export default function ButtonBack(props: { onClick?(): void }) {
 const Container = styled.button`
   height: 40px;
   width: 40px;
-  box-shadow: 0px 48px 100px 0px rgba(17, 12, 46, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
   background-color: white;
   justify-content: center;
   align-content: center;
