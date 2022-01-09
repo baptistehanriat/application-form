@@ -120,6 +120,7 @@ function App() {
             <P1>Here is a recap of the information you filled!</P1>
             {tenantQuestionnaire.map((question) => (
               <View
+                key={question.answerKey}
                 style={{
                   margin: '20px 0 0px 0',
                   flexDirection: 'row',
