@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Question } from '../../App'
 import View from '../layout/View'
+import { Question } from '../questionnaire/types'
 import { Colors } from '../style/colors'
 
 export default function ProgressBar(props: {
