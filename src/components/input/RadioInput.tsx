@@ -60,6 +60,7 @@ function Checkbox(props: {
     >
       <BoxContainer>
         <View
+          className="ease-out-animation"
           style={{
             width: 18,
             flex: 'none',
