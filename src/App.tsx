@@ -37,7 +37,7 @@ function App() {
       placeholder: '123456789',
     },
     {
-      text: 'In what range your salary would be?',
+      text: 'In what range your salary is ?',
       type: 'RadioButtonsQuestion',
       choices: [
         { key: 'key1', text: '0 - 1.000' },
