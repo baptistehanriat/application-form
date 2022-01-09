@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import View from '../layout/View'
 import { Question } from '../questionnaire/types'
 import { Colors } from '../style/colors'
@@ -18,6 +17,12 @@ export default function ProgressBar(props: {
     >
       {props.questions.map((question, index) => {
         const isExtremity = index === props.questions.length - 1
+        let status: 'undone' | 'ongoing' | 'done' = 'undone'
+        if (index === props.currentIndex) {
+          status = 'ongoing'
+        } else if (index < props.currentIndex) {
+          status = 'done'
+        }
         return (
           <View
             key={question.answerKey}
@@ -27,24 +32,8 @@ export default function ProgressBar(props: {
               alignItems: 'center',
             }}
           >
-            {index < props.currentIndex && (
-              <>
-                <DotDone />
-                <LineDone />
-              </>
-            )}
-            {index === props.currentIndex && (
-              <>
-                <DotFocus />
-                <Line />
-              </>
-            )}
-            {index > props.currentIndex && (
-              <>
-                <Dot />
-                <Line />
-              </>
-            )}
+            <Dot status={status} />
+            <Line status={status} />
           </View>
         )
       })}
@@ -52,30 +41,38 @@ export default function ProgressBar(props: {
   )
 }
 
-const Line = styled(View)`
-  height: 2px;
-  flex: 1;
-  z-index: 1;
-  width: 100%;
-  background-color: ${Colors.Grey100};
-`
+function Line(props: { status: 'undone' | 'ongoing' | 'done' }) {
+  return (
+    <View
+      className="ease-out-animation"
+      style={{
+        height: 2,
+        flex: 1,
+        zIndex: 1,
+        width: '100%',
+        backgroundColor:
+          props.status === 'done' ? Colors.Primary500 : Colors.Grey100,
+      }}
+    />
+  )
+}
 
-const LineDone = styled(Line)`
-  background-color: ${Colors.Primary500};
-`
-
-const Dot = styled(View)`
-  height: 24px;
-  width: 24px;
-  z-index: 2;
-  transform: rotate(45deg);
-  background-color: ${Colors.Grey100};
-`
-
-const DotFocus = styled(Dot)`
-  border: 2px solid ${Colors.Primary500};
-`
-
-const DotDone = styled(Dot)`
-  background-color: ${Colors.Primary500};
-`
+function Dot(props: { status: 'undone' | 'ongoing' | 'done' }) {
+  return (
+    <View
+      className="ease-out-animation"
+      style={{
+        height: 24,
+        width: 24,
+        zIndex: 2,
+        transform: 'rotate(45deg)',
+        backgroundColor:
+          props.status === 'done' ? Colors.Primary500 : Colors.Grey100,
+        border:
+          props.status === 'ongoing'
+            ? `2px solid ${Colors.Primary500}`
+            : `0px solid ${Colors.Grey100}`,
+      }}
+    />
+  )
+}

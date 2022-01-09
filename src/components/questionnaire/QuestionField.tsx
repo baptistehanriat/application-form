@@ -6,13 +6,13 @@ import { H2 } from '../style/texts'
 import { Question } from './types'
 
 export default function QuestionField(props: QuestionFieldProps) {
-  const validateNumberFormat = (phone: string) => {
-    return /^\d+$/.test(phone)
-  }
+  // const validateNumberFormat = (phone: string) => {
+  //   return /^\d+$/.test(phone)
+  // }
 
-  const validateEmailFormat = (email: string) => {
-    return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)
-  }
+  // const validateEmailFormat = (email: string) => {
+  //   return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)
+  // }
 
   switch (props.question.type) {
     case 'StringQuestion':
