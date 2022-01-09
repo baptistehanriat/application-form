@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import ButtonBack from './components/button/ButtonBack'
 import ButtonPrimary from './components/button/ButtonPrimary'
+import FlexView from './components/layout/FlexView'
 import View from './components/layout/View'
 import QuestionField from './components/questionnaire/QuestionField'
 import { Question } from './components/questionnaire/types'
@@ -70,6 +71,7 @@ function App() {
   const onGoBack = () => {
     if (index === 0) {
       setQuestionnaireStatus('ready')
+      setAnswers({})
     } else {
       setIndex(index - 1)
     }
@@ -82,7 +84,8 @@ function App() {
           <>
             <H1 style={{ marginBottom: 50 }}>Ready to join us ? 🚀</H1>
             <ButtonPrimary
-              label="Start"
+              style={{ alignSelf: 'center' }}
+              label="Start now"
               onClick={() => {
                 setQuestionnaireStatus('ongoing')
               }}
@@ -103,15 +106,34 @@ function App() {
               answer={answers[currentQuestion.answerKey]}
               question={currentQuestion}
             />
-            <ButtonPrimary label="Next" onClick={onGoNext} />
+            <ButtonPrimary
+              style={{ alignSelf: 'flex-end' }}
+              label={
+                index === tenantQuestionnaire.length - 1 ? 'Submit' : 'Next'
+              }
+              onClick={onGoNext}
+            />
           </>
         )}
         {questionnaireStatus === 'finished' && (
           <>
-            <H1>All done!</H1>
+            <H1 style={{ marginBottom: 20 }}>All done! 🎉</H1>
             <P1>Here is a recap of the information you filled!</P1>
-            {Object.values(answers).map((answer) => (
-              <P1 key={answer}>{answer}</P1>
+            {tenantQuestionnaire.map((question) => (
+              <View
+                style={{
+                  margin: '20px 0 0px 0',
+                  flexDirection: 'row',
+                }}
+              >
+                <Marker />
+                <View>
+                  <P1 style={{ color: Colors.Grey600 }}>{question.text}</P1>
+                  <P1 style={{ fontWeight: 600 }}>
+                    {answers[question.answerKey]}
+                  </P1>
+                </View>
+              </View>
             ))}
             <ButtonPrimary
               onClick={() => {
@@ -119,7 +141,8 @@ function App() {
                 setAnswers({})
                 setIndex(0)
               }}
-              label="Start again"
+              style={{ alignSelf: 'center', marginTop: 50 }}
+              label="Start over"
             />
           </>
         )}
@@ -140,7 +163,12 @@ const Container = styled(View)`
 const InnerContainer = styled(View)`
   flex: 1;
   justify-content: center;
-  width: 450px; // FIXME: use CSS breakpoint
+  min-width: 450px; // FIXME: use CSS breakpoint
 `
 
+const Marker = styled(View)`
+  background-color: ${Colors.Primary500};
+  width: 2px;
+  margin-right: 20px;
+`
 export default App

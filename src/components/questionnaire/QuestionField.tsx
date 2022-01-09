@@ -1,12 +1,12 @@
 import { TextInput } from '../input/TextInput'
-import InputRadio from '../input/InputRadio'
+import RadioInput from '../input/RadioInput'
 import View from '../layout/View'
-import { P1 } from '../style/texts'
+import { H2, P1 } from '../style/texts'
 import { Question } from './types'
 import styled from 'styled-components'
 
 export default function QuestionField(props: QuestionFieldProps) {
-  const validatePhoneFormat = (phone: string) => {
+  const validateNumberFormat = (phone: string) => {
     return /^\d+$/.test(phone)
   }
 
@@ -18,14 +18,14 @@ export default function QuestionField(props: QuestionFieldProps) {
     case 'StringQuestion':
       return <TextInputQuestion type="text" {...props} />
     case 'NumberQuestion':
-      return <TextInputQuestion type="number" {...props} />
+      return <TextInputQuestion type="text" {...props} />
     case 'EmailQuestion':
       return <TextInputQuestion type="email" {...props} />
     case 'RadioButtonsQuestion':
       return (
         <Container>
           <QuestionLabel>{props.question.text}</QuestionLabel>
-          <InputRadio
+          <RadioInput
             choices={props.question.choices!}
             onChange={props.onChange}
           />
@@ -65,11 +65,11 @@ interface TextInputQuestionProps extends QuestionFieldProps {
 }
 
 const Container = styled(View)`
-  margin-bottom: 40px;
-  margin-top: 100px;
+  margin-bottom: 50px;
+  margin-top: 50px;
 `
 
-const QuestionLabel = styled(P1)`
+const QuestionLabel = styled(H2)`
   margin-left: 20px;
-  margin-right: 20px;
+  margin-bottom: 20px;
 `

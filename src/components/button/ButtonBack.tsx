@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import ChevronLeft from '../icon/ChevronLeft'
 import { Colors } from '../style/colors'
-import { P1 } from '../style/texts'
 
 export default function ButtonBack(props: {
   style?: React.CSSProperties
@@ -15,14 +14,16 @@ export default function ButtonBack(props: {
 }
 
 const Container = styled.button`
-  height: 40px;
-  width: 40px;
+  height: 50px;
+  width: 50px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
   background-color: white;
   justify-content: center;
   align-content: center;
   align-items: center;
   padding: 0px;
+  padding-top: 3px;
+  padding-right: 3px;
   cursor: pointer;
   border: none;
   :hover {

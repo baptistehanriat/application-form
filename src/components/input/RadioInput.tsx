@@ -2,8 +2,9 @@ import View from '../layout/View'
 import { CSSProperties, ReactNode, useState } from 'react'
 import { Colors } from '../style/colors'
 import { P1 } from '../style/texts'
+import styled from 'styled-components'
 
-interface InputRadioProps {
+interface RadioInputProps {
   choices: Array<{ key: string; text: string }>
   onChange(value: string): void
   defaultValue?: string
@@ -12,7 +13,7 @@ interface InputRadioProps {
   style?: CSSProperties
 }
 
-export default function InputRadio(props: InputRadioProps) {
+export default function RadioInput(props: RadioInputProps) {
   const [checkedValue, setCheckedValue] = useState(props.defaultValue)
   return (
     <View style={props.style}>
@@ -31,9 +32,8 @@ export default function InputRadio(props: InputRadioProps) {
               setCheckedValue(value.key)
               props.onChange(value.text)
             }}
-          >
-            <P1 style={{ marginLeft: 15, textAlign: 'left' }}>{value.text}</P1>
-          </Checkbox>
+          ></Checkbox>
+          <P1 style={{ marginLeft: 15, textAlign: 'left' }}>{value.text}</P1>
         </View>
       ))}
     </View>
@@ -44,7 +44,6 @@ function Checkbox(props: {
   checked: boolean
   onClick(): void
   style?: CSSProperties
-  children?: ReactNode
 }) {
   return (
     <button
@@ -59,20 +58,8 @@ function Checkbox(props: {
         cursor: 'pointer',
       }}
     >
-      <View
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 24,
-          height: 24,
-          border: `3px solid ${Colors.Primary500}`,
-          flex: 'none',
-          backgroundColor: 'transparent',
-        }}
-      >
+      <BoxContainer>
         <View
-          className="ease-out-animation"
           style={{
             width: 18,
             flex: 'none',
@@ -82,8 +69,20 @@ function Checkbox(props: {
             backgroundColor: Colors.Primary500,
           }}
         />
-      </View>
-      {props.children}
+      </BoxContainer>
     </button>
   )
 }
+
+const BoxContainer = styled(View)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid ${Colors.Primary500};
+  background-color: 'transparent';
+  :hover {
+    background-color: ${Colors.Grey100};
+  }
+`

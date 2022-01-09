@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { Colors } from '../style/colors'
-import { P1 } from '../style/texts'
+import { H2 } from '../style/texts'
 
 export default function ButtonBase(props: ButtonBaseProps) {
   const disabled = props.status === 'disabled'
@@ -12,7 +12,7 @@ export default function ButtonBase(props: ButtonBaseProps) {
       onClick={props.onClick}
       {...props}
     >
-      <P1 style={{ color: props.labelColor }}>{props.label}</P1>
+      <H2 style={{ color: props.labelColor }}>{props.label}</H2>
     </ButtonBaseStyled>
   )
 }
