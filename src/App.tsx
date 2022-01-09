@@ -93,25 +93,33 @@ function App() {
         )}
         {questionnaireStatus === 'ongoing' && (
           <>
-            <View style={{ flexDirection: 'row' }}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
+            >
               <ButtonBack style={{ marginRight: 40 }} onClick={onGoBack} />
               <ProgressBar
                 currentIndex={index}
                 questions={tenantQuestionnaire}
               />
             </View>
-            <QuestionField
-              onChange={onChange}
-              answer={answers[currentQuestion.answerKey]}
-              question={currentQuestion}
-            />
-            <ButtonPrimary
-              style={{ alignSelf: 'flex-end' }}
-              label={
-                index === tenantQuestionnaire.length - 1 ? 'Submit' : 'Next'
-              }
-              onClick={onGoNext}
-            />
+            <View style={{ flex: 2 }}>
+              <QuestionField
+                onChange={onChange}
+                answer={answers[currentQuestion.answerKey]}
+                question={currentQuestion}
+              />
+              <ButtonPrimary
+                style={{ alignSelf: 'flex-end' }}
+                label={
+                  index === tenantQuestionnaire.length - 1 ? 'Submit' : 'Next'
+                }
+                onClick={onGoNext}
+              />
+            </View>
           </>
         )}
         {questionnaireStatus === 'finished' && (
@@ -163,7 +171,14 @@ const Container = styled(View)`
 const InnerContainer = styled(View)`
   flex: 1;
   justify-content: center;
-  min-width: 450px; // FIXME: use CSS breakpoint
+
+  @media (min-width: 992px) {
+    min-width: 450px;
+  }
+
+  @media (max-width: 992px) {
+    min-width: 100%;
+  }
 `
 
 const Marker = styled(View)`

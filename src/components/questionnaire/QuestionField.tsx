@@ -66,7 +66,7 @@ interface TextInputQuestionProps extends QuestionFieldProps {
 
 const Container = styled(View)`
   margin-bottom: 50px;
-  margin-top: 50px;
+  margin-top: 20px;
 `
 
 const QuestionLabel = styled(H2)`
