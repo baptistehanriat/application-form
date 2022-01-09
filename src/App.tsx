@@ -173,11 +173,11 @@ const InnerContainer = styled(View)`
   flex: 1;
   justify-content: center;
 
-  @media (min-width: 992px) {
+  @media (min-width: 500px) {
     min-width: 450px;
   }
 
-  @media (max-width: 992px) {
+  @media (max-width: 500px) {
     min-width: 100%;
   }
 `
