@@ -22,10 +22,9 @@ const Container = styled.button`
   justify-content: center;
   align-content: center;
   align-items: center;
-  padding: 0;
+  padding: 0px;
   cursor: pointer;
   border: none;
-
   :hover {
     background-color: ${Colors.Slate100};
   }

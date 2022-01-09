@@ -1,19 +1,42 @@
-import { cp } from 'fs'
 import React, { useState } from 'react'
-import styled, { CSSProperties } from 'styled-components'
+import styled from 'styled-components'
 import ButtonBack from './components/button/ButtonBack'
 import ButtonPrimary from './components/button/ButtonPrimary'
 import { PrettyInputBase } from './components/input/InputBase'
-import FlexView from './components/layout/FlexView'
+import InputRadio from './components/input/InputRadio'
 import View from './components/layout/View'
 import { Colors } from './components/style/colors'
 import { H1, P1 } from './components/style/texts'
+import ProgressBar from './components/util/ProgressBar'
 
-interface Question {
+interface QuestionBase {
   text: string
-  type: 'shortString' | 'email' | 'phoneNumber' | 'budget'
   answerKey: string
 }
+// | 'emailInput' | 'numberInput' | 'radioButtons'
+interface StringQuestion extends QuestionBase {
+  type: 'StringQuestion'
+  placeholder?: string // used for any xxxInput
+}
+interface EmailQuestion extends QuestionBase {
+  type: 'EmailQuestion'
+  placeholder?: string // used for any xxxInput
+}
+interface NumberQuestion extends QuestionBase {
+  type: 'NumberQuestion'
+  placeholder?: string // used for any xxxInput
+}
+interface RadioButtonsQuestion extends QuestionBase {
+  type: 'RadioButtonsQuestion'
+  placeholder?: string // used for any xxxInput
+  choices: { key: string; text: string }[]
+}
+
+export type Question =
+  | StringQuestion
+  | EmailQuestion
+  | NumberQuestion
+  | RadioButtonsQuestion
 
 function App() {
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -26,22 +49,32 @@ function App() {
   const tenantQuestionnaire: Question[] = [
     {
       text: "What's your full name ?",
-      type: 'shortString',
+      type: 'StringQuestion',
       answerKey: 'nameAnswerKey',
+      placeholder: 'John Doe',
     },
     {
       text: "What's your email ?",
-      type: 'email',
+      type: 'EmailQuestion',
       answerKey: 'emailAnswerKey',
+      placeholder: 'john@doe.com',
     },
     {
       text: "What's your phone number ?",
-      type: 'phoneNumber',
+      type: 'NumberQuestion',
       answerKey: 'phoneAnswerKey',
+      placeholder: '123456789',
     },
     {
-      text: 'Select your budget',
-      type: 'budget', // At some point we can have one generic for this one
+      text: 'Some hint on your salary.',
+      type: 'RadioButtonsQuestion',
+      choices: [
+        { key: 'key1', text: '0 - 1.000' },
+        { key: 'key2', text: '1.000 - 2.000' },
+        { key: 'key3', text: '2.000 - 3.000' },
+        { key: 'key4', text: '3.000 - 4.000' },
+        { key: 'key5', text: 'Over 4.000' },
+      ],
       answerKey: 'budgetAnswerKey',
     },
   ]
@@ -71,28 +104,28 @@ function App() {
     }
   }
 
-  console.log(answers)
   return (
     <Container>
       <InnerContainer>
         {questionnaireStatus === 'ready' && (
           <>
             <H1 style={{ marginBottom: 50 }}>Ready to join us ? 🚀</H1>
-            <View style={{ alignItems: 'flex-end' }}>
-              <ButtonPrimary
-                label="Start"
-                onClick={() => {
-                  setQuestionnaireStatus('ongoing')
-                }}
-              />
-            </View>
+            <ButtonPrimary
+              label="Start"
+              onClick={() => {
+                setQuestionnaireStatus('ongoing')
+              }}
+            />
           </>
         )}
         {questionnaireStatus === 'ongoing' && (
           <>
             <View style={{ flexDirection: 'row' }}>
               <ButtonBack style={{ marginRight: 40 }} onClick={onGoBack} />
-              <ProgressBar questions={tenantQuestionnaire} />
+              <ProgressBar
+                currentIndex={index}
+                questions={tenantQuestionnaire}
+              />
             </View>
 
             <QuestionField
@@ -128,73 +161,45 @@ function App() {
 function QuestionField(props: QuestionFieldProps) {
   const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === 'Enter') {
+      // could add the enter event
     }
+  }
+
+  const validatePhoneFormat = (phone: string) => {
+    return /^\d+$/.test(phone)
   }
 
   const validateEmailFormat = (email: string) => {
     return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)
   }
 
+  // switch (QuestionField.type) {
+  //   case 'stringQuestion':
+  //     return <StringQuestion question={question} />
+  // }
+
   return (
     <View style={{ marginBottom: 40, marginTop: 100 }}>
       <P1 style={{ marginLeft: 20, marginBottom: 20 }}>
         {props.question.text}
       </P1>
-      <PrettyInputBase
-        type="email"
-        placeholder="toto"
-        onKeyDown={keyDownHandler}
-        value={props.answer || ''}
-        onChange={(e) => props.onChange(e.target.value)}
-      ></PrettyInputBase>
-    </View>
-  )
-}
-
-function ProgressBar(props: { questions: Question[] }) {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        flex: 1,
-        justifyContent: 'space-between',
-        // alignItems: 'center',
-      }}
-    >
-      {props.questions.map((question, index) => {
-        const isExtremity = index === props.questions.length - 1
-        return (
-          <View
-            key={question.answerKey}
-            style={{
-              flexDirection: 'row',
-              flex: isExtremity ? 0 : 1,
-              alignItems: 'center',
-            }}
-          >
-            <View
-              style={{
-                height: 24,
-                width: 24,
-                zIndex: 2,
-                transform: 'rotate(45deg)',
-                backgroundColor: Colors.Primary500,
-              }}
-            />
-            {!isExtremity && (
-              <View
-                style={{
-                  height: 2,
-                  flex: 1,
-                  zIndex: 1,
-                  width: '100%',
-                  backgroundColor: Colors.Primary500,
-                }}
-              ></View>
-            )}
-          </View>
-        )
-      })}
+      {props.question.type === 'RadioButtonsQuestion' && (
+        <InputRadio
+          choices={props.question.choices!}
+          onChange={props.onChange}
+        />
+      )}
+      {(props.question.type === 'StringQuestion' ||
+        props.question.type === 'EmailQuestion' ||
+        props.question.type === 'NumberQuestion') && (
+        <PrettyInputBase
+          type={props.question.type}
+          placeholder={props.question.placeholder}
+          onKeyDown={keyDownHandler}
+          value={props.answer || ''}
+          onChange={(e) => props.onChange(e.target.value)}
+        />
+      )}
     </View>
   )
 }
@@ -217,7 +222,7 @@ const Container = styled(View)`
 const InnerContainer = styled(View)`
   flex: 1;
   justify-content: center;
-  max-width: 450px;
+  width: 450px; // use breakpoint CSS
 `
 
 export default App
