@@ -31,7 +31,6 @@ const ButtonBaseStyled = styled.button`
   border: none;
   padding: 0 20px 0 20px;
   background-color: ${Colors.Primary500}
-
   transition: all 0.1s ease-out;
   cursor: pointer;
   :focus {

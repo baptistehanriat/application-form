@@ -1,16 +1,11 @@
-import { PrettyInputBase } from '../input/InputBase'
+import { TextInput } from '../input/TextInput'
 import InputRadio from '../input/InputRadio'
 import View from '../layout/View'
 import { P1 } from '../style/texts'
 import { Question } from './types'
+import styled from 'styled-components'
 
 export default function QuestionField(props: QuestionFieldProps) {
-  const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.code === 'Enter') {
-      // could add the enter event
-    }
-  }
-
   const validatePhoneFormat = (phone: string) => {
     return /^\d+$/.test(phone)
   }
@@ -19,34 +14,43 @@ export default function QuestionField(props: QuestionFieldProps) {
     return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)
   }
 
-  // switch (QuestionField.type) {
-  //   case 'stringQuestion':
-  //     return <StringQuestion question={question} />
-  // }
+  switch (props.question.type) {
+    case 'StringQuestion':
+      return <TextInputQuestion type="text" {...props} />
+    case 'NumberQuestion':
+      return <TextInputQuestion type="number" {...props} />
+    case 'EmailQuestion':
+      return <TextInputQuestion type="email" {...props} />
+    case 'RadioButtonsQuestion':
+      return (
+        <Container>
+          <QuestionLabel>{props.question.text}</QuestionLabel>
+          <InputRadio
+            choices={props.question.choices!}
+            onChange={props.onChange}
+          />
+        </Container>
+      )
+  }
+}
 
+function TextInputQuestion(props: TextInputQuestionProps) {
+  const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.code === 'Enter') {
+      // could add the enter event
+    }
+  }
   return (
-    <View style={{ marginBottom: 40, marginTop: 100 }}>
-      <P1 style={{ marginLeft: 20, marginBottom: 20 }}>
-        {props.question.text}
-      </P1>
-      {props.question.type === 'RadioButtonsQuestion' && (
-        <InputRadio
-          choices={props.question.choices!}
-          onChange={props.onChange}
-        />
-      )}
-      {(props.question.type === 'StringQuestion' ||
-        props.question.type === 'EmailQuestion' ||
-        props.question.type === 'NumberQuestion') && (
-        <PrettyInputBase
-          type={props.question.type}
-          placeholder={props.question.placeholder}
-          onKeyDown={keyDownHandler}
-          value={props.answer || ''}
-          onChange={(e) => props.onChange(e.target.value)}
-        />
-      )}
-    </View>
+    <Container>
+      <QuestionLabel>{props.question.text}</QuestionLabel>
+      <TextInput
+        type={props.type}
+        placeholder={props.question.placeholder}
+        // onKeyDown={keyDownHandler}
+        value={props.answer || ''}
+        onChange={(e) => props.onChange(e.target.value)}
+      />
+    </Container>
   )
 }
 
@@ -55,3 +59,17 @@ interface QuestionFieldProps {
   answer: string
   onChange(answer: string): void
 }
+
+interface TextInputQuestionProps extends QuestionFieldProps {
+  type: string
+}
+
+const Container = styled(View)`
+  margin-bottom: 40px;
+  margin-top: 100px;
+`
+
+const QuestionLabel = styled(P1)`
+  margin-left: 20px;
+  margin-right: 20px;
+`

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Colors } from '../style/colors'
 
-export const PrettyInputBase = styled.input`
+export const TextInput = styled.input`
   font-family: Jost;
   font-size: 16px;
   height: 50px;
