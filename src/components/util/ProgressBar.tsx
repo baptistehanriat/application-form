@@ -18,7 +18,6 @@ export default function ProgressBar(props: {
     >
       {props.questions.map((question, index) => {
         const isExtremity = index === props.questions.length - 1
-        console.log('index, CurrentIndex', index, props.currentIndex)
         return (
           <View
             key={question.answerKey}
