@@ -37,7 +37,7 @@ export default function QuestionField(props: QuestionFieldProps) {
 function TextInputQuestion(props: TextInputQuestionProps) {
   const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === 'Enter') {
-      // could add the enter event
+      props.onGoNext()
     }
   }
   return (
@@ -46,7 +46,7 @@ function TextInputQuestion(props: TextInputQuestionProps) {
       <TextInput
         type={props.type}
         placeholder={props.question.placeholder}
-        // onKeyDown={keyDownHandler}
+        onKeyDown={keyDownHandler}
         value={props.answer || ''}
         onChange={(e) => props.onChange(e.target.value)}
       />
@@ -58,6 +58,7 @@ interface QuestionFieldProps {
   question: Question
   answer: string
   onChange(answer: string): void
+  onGoNext(): void
 }
 
 interface TextInputQuestionProps extends QuestionFieldProps {

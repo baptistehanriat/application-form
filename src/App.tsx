@@ -108,6 +108,7 @@ function App() {
             </View>
             <View style={{ flex: 2 }}>
               <QuestionField
+                onGoNext={onGoNext}
                 onChange={onChange}
                 answer={answers[currentQuestion.answerKey]}
                 question={currentQuestion}
