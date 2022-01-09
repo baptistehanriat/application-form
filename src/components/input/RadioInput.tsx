@@ -1,8 +1,8 @@
+import { CSSProperties, useState } from 'react'
+import styled from 'styled-components'
 import View from '../layout/View'
-import { CSSProperties, ReactNode, useState } from 'react'
 import { Colors } from '../style/colors'
 import { P1 } from '../style/texts'
-import styled from 'styled-components'
 
 interface RadioInputProps {
   choices: Array<{ key: string; text: string }>

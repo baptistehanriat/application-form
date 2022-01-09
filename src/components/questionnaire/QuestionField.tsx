@@ -1,9 +1,9 @@
-import { TextInput } from '../input/TextInput'
-import RadioInput from '../input/RadioInput'
-import View from '../layout/View'
-import { H2, P1 } from '../style/texts'
-import { Question } from './types'
 import styled from 'styled-components'
+import RadioInput from '../input/RadioInput'
+import { TextInput } from '../input/TextInput'
+import View from '../layout/View'
+import { H2 } from '../style/texts'
+import { Question } from './types'
 
 export default function QuestionField(props: QuestionFieldProps) {
   const validateNumberFormat = (phone: string) => {
